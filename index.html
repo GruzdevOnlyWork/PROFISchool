@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROFI - тренажёр Python</title>
+  <meta name="description" content="Задачи на Python для профпроб PROFI. Пиши код и проверяй его прямо в браузере.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Noto+Sans+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#task">Перейти к задаче</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">P</span>
+        <span class="brand-text">
+          <span class="brand-title">PROFI</span>
+          <span class="brand-sub">тренажёр Python</span>
+        </span>
+      </div>
+
+      <button class="btn btn-on-dark tasks-toggle" id="btn-tasks" type="button" aria-expanded="false" aria-controls="sidebar">Задачи</button>
+
+      <div class="progress">
+        <span class="progress-text"><b id="progress-done">0</b> из <span id="progress-total">0</span> решено</span>
+        <div class="progress-track" id="progress-bar" role="progressbar" aria-label="Решено задач" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-on-dark" id="btn-cheatsheet" type="button">Шпаргалка</button>
+
+      <div class="py-status" id="py-status" data-state="loading" role="status">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="py-status-text">Python загружается...</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" id="sidebar" aria-label="Задачи">
+      <h2 class="sidebar-head">Задачи</h2>
+      <div id="task-list"></div>
+    </nav>
+
+    <main class="main">
+      <article class="task" id="task" aria-labelledby="task-title" tabindex="-1">
+        <div class="task-meta">
+          <span class="topic" id="task-topic"></span>
+          <span class="level" id="task-level"></span>
+          <span class="solved-mark" id="task-solved" hidden>
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Решено
+          </span>
+        </div>
+        <h1 class="task-title" id="task-title"></h1>
+        <div class="task-text" id="task-text"></div>
+
+        <dl class="io-format">
+          <div><dt>Входные данные</dt><dd id="task-input"></dd></div>
+          <div><dt>Выходные данные</dt><dd id="task-output"></dd></div>
+        </dl>
+
+        <h3 class="section-label">Пример</h3>
+        <div class="examples" id="task-examples"></div>
+
+        <details class="theory" id="task-theory-box">
+          <summary>
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 3.5h9a2 2 0 0 1 2 2V17H6a2 2 0 0 1-2-2V3.5zM4 15a2 2 0 0 1 2-2h9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span id="task-theory-title">Шпаргалка</span>
+          </summary>
+          <div class="theory-body" id="task-theory"></div>
+        </details>
+      </article>
+
+      <section class="workspace" id="workspace" aria-label="Редактор кода">
+        <div class="ws-toolbar">
+          <span class="ws-tab">solution.py</span>
+          <div class="ws-actions">
+            <button class="btn btn-ghost-dark" id="btn-reset" type="button">Сбросить</button>
+            <button class="btn btn-outline-dark" id="btn-run" type="button" disabled aria-keyshortcuts="Control+Enter">
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3.5v9l7-4.5z" fill="currentColor"/></svg>
+              Запустить
+            </button>
+            <button class="btn btn-check" id="btn-check" type="button" disabled data-state="loading" aria-keyshortcuts="Control+Shift+Enter">
+              <span class="btn-check-icon" id="btn-check-icon" aria-hidden="true"></span>
+              <span id="btn-check-text">Загрузка...</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="editor"></div>
+
+        <div class="ws-console">
+          <div class="console-pane">
+            <label class="console-label" for="stdin">Ввод</label>
+            <textarea id="stdin" spellcheck="false" placeholder="Сюда пиши то, что программа прочитает через input()"></textarea>
+          </div>
+          <div class="console-pane">
+            <span class="console-label" id="stdout-label">Вывод</span>
+            <pre id="stdout" class="out-empty" aria-labelledby="stdout-label" aria-live="polite"></pre>
+          </div>
+        </div>
+        <p class="ws-keys"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> запустить, <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Enter</kbd> проверить</p>
+      </section>
+
+      <section class="results" id="results" hidden aria-labelledby="results-title">
+        <div class="results-head">
+          <h3 id="results-title">Проверка</h3>
+          <p id="results-summary" role="status"></p>
+        </div>
+        <ol class="tests" id="tests"></ol>
+        <div id="test-detail"></div>
+        <div class="success" id="success" hidden>
+          <span class="success-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" focusable="false"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div class="success-text">
+            <p class="success-title">Верно! Задача решена.</p>
+            <p id="success-text"></p>
+          </div>
+          <button class="btn btn-accent" id="btn-next" type="button">Следующая задача</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="cheatsheet" id="cheatsheet" aria-labelledby="cheatsheet-title">
+    <div class="cs-head">
+      <h2 id="cheatsheet-title">Шпаргалка</h2>
+      <button class="btn btn-on-dark" id="btn-cheatsheet-close" type="button">Закрыть</button>
+    </div>
+    <div class="cs-body theory-body" id="cheatsheet-body"></div>
+  </dialog>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script src="js/theory.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/runner.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
