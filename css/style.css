@@ -142,18 +142,7 @@ h1, h2, h3 { line-height: 1.2; }
 }
 
 .brand { display: flex; align-items: center; gap: 12px; }
-.brand-logo {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  background: var(--white);
-  color: var(--navy-900);
-  font-family: var(--mono);
-  font-size: 20px;
-  font-weight: 700;
-}
+.brand-logo { display: block; width: auto; height: 44px; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
 .brand-title { font-size: 17px; font-weight: 700; letter-spacing: .08em; }
 .brand-sub { font-size: 13px; color: var(--navy-300); }
@@ -578,6 +567,8 @@ kbd {
 @media (max-width: 700px) {
   body { font-size: 16px; }
   .brand-sub { display: none; }
+  .brand-logo { height: 36px; }
+  .topbar .btn { padding: 0 12px; }
   .py-status { display: none; }
   .py-status[data-state="error"] { display: flex; order: 6; flex-basis: 100%; white-space: normal; }
   .py-status[data-state="error"] .py-status-text { display: inline; }
@@ -591,6 +582,10 @@ kbd {
   .ws-tab { margin-bottom: 0; padding-block: 10px; }
   .io-format, .example, .detail-grid { grid-template-columns: 1fr; }
   .cs-body { padding: 4px 18px 20px; }
+}
+
+@media (max-width: 400px) {
+  .brand-text { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
